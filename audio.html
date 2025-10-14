@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Áudio</title>
+</head>
+<body>
+    <audio id="audio-player" loop>
+        <source src="assets/musica2.mp3" type="audio/mpeg">
+        Seu navegador não suporta a tag de áudio.
+    </audio>
+
+    <script>
+        const audioPlayer = document.getElementById("audio-player");
+
+        // Listen for messages from parent window
+        window.addEventListener('message', function(event) {
+            if (event.data === 'play') {
+                audioPlayer.play();
+            } else if (event.data === 'pause') {
+                audioPlayer.pause();
+            }
+        });
+
+        // Verifica se o tempo de áudio já foi salvo e retoma de onde parou
+        const savedTime = localStorage.getItem('audioTime');
+        if (savedTime) {
+            audioPlayer.currentTime = savedTime;
+        }
+
+        // Sempre que o áudio for pausado ou terminar, salva o tempo no LocalStorage
+        audioPlayer.addEventListener('timeupdate', function() {
+            localStorage.setItem('audioTime', audioPlayer.currentTime);
+        });
+
+        // Auto-play if musicPlaying is set
+        if (sessionStorage.getItem('musicPlaying') === 'true') {
+            audioPlayer.play();
+        }
+    </script>
+</body>
+</html>
